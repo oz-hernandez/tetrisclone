@@ -118,15 +118,24 @@ function initGameBoard() {
 }
 
 function addPieceToGameBoard(gameBoard, piece) {
-	for ( let i = 0; i < PIECEWIDTH; ++i) {
-		for ( let j = 0; j < PIECEHEIGHT; ++j ) {
-			if piece[j][i] != false {
-				gameBoard[ i + globalPosition_X][ j + globalPosition_Y] = currentPieceColor;
+	for ( let x = 0; i < PIECEWIDTH; ++i) {
+		for ( let y = 0; j < PIECEHEIGHT; ++j ) {
+			if ( !piece[y][x] ) {
+				gameBoard[ x + globalPosition_X ][ y + globalPosition_Y ] = currentPieceColor;
 			}
 		}
 	}
 }
 
+function drawPiece(piece) {
+	for ( let x = 0; i < PIECEWIDTH; ++i ) {
+		for ( let y = 0; j < PIECEHEIGHT; ++j ) {
+			if ( !piece[y][x] ) {
+				renderSquare(globalPosition_X, globalPosition_Y, x, y)
+			}
+		}
+	}
+}
 
 
 var game = new main;
