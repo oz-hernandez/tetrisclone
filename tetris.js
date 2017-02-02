@@ -121,7 +121,7 @@ function addPieceToGameBoard(gameBoard, piece) {
 	for ( let i = 0; i < PIECEWIDTH; ++i) {
 		for ( let j = 0; j < PIECEHEIGHT; ++j ) {
 			if piece[j][i] != false {
-				gameBoard[ i + globalPosition_X][ j + globalPosition_Y] = color['color']
+				gameBoard[ i + globalPosition_X][ j + globalPosition_Y] = currentPieceColor;
 			}
 		}
 	}
