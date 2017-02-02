@@ -63,7 +63,7 @@ var CUBE_SHAPE = 	[
 function main(canvas_id) {
 
 	/*
-	 * board and shape sizes
+	 * 	board and shape sizes
 	 *
 	 */
 
@@ -76,14 +76,18 @@ function main(canvas_id) {
 	 var 	HORIZONTALMARGIN 	= ( ( WINDOWWIDTH - (BOARDWIDTH * BOXSIZE)) / 2 );
 	 var	TOPMARGIN			= ( ( WINDOWHEIGHT - ( BOARDHEIGHT * BOXSIZE )) - 5 );
 
+	 var	PIECEWIDTH			= 5;
+	 var 	PIECEHEIGHT			= 5;
+
+
 	/*
-	 * color macros
+	 * 		colors
 	 *
 	 */
 
-	 var     BLACK 		= (   0,   0,   0 );
-	 var	 WHITE		= ( 255, 255, 255 );
-	 var	 RED 		= ( 155,   0,   0 );
+	 var    BLACK 		= (   0,   0,   0 );
+	 var	WHITE		= ( 255, 255, 255 );
+	 var	RED 		= ( 155,   0,   0 );
 
 
 	
@@ -101,22 +105,29 @@ function main(canvas_id) {
 	  init(canvas_id);
 	  var board = initGameBoard();
 
-
-
-	  
-
-	
-
- 	function initGameBoard() {
-		var gameBoard = [];
-
-		for ( let i = 0; i < BOARDWIDTH; ++i ) {
-			gameBoard[i] = ( [false] * BOARDHEIGHT );
-
-		return gameBoard;
-		}
 	}	
 }
+
+function initGameBoard() {
+	var gameBoard = [];
+
+	for ( let i = 0; i < BOARDWIDTH; ++i ) {
+		gameBoard[i] = ( [false] * BOARDHEIGHT );
+
+	return gameBoard;
+}
+
+function addPieceToGameBoard(gameBoard, piece) {
+	for ( let i = 0; i < PIECEWIDTH; ++i) {
+		for ( let j = 0; j < PIECEHEIGHT; ++j ) {
+			if piece[j][i] != false {
+				gameBoard[ i + globalPosition_X][ j + globalPosition_Y] = color['color']
+			}
+		}
+	}
+}
+
+
 
 var game = new main;
 game.init('tetris_canvas');
