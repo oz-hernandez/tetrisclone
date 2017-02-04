@@ -137,6 +137,14 @@ function drawPiece(piece) {
 	}
 }
 
+function draw() {
+	var FPS = 45;
+	setTimeout( function() {
+		window.requestAnimationFrame( draw );
+		// drawing code here
+	}, 1000 / FPS )
+}
+
 
 var game = new main;
 game.init('tetris_canvas');
