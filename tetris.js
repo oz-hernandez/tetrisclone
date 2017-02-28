@@ -75,8 +75,8 @@ function main(canvas_id) {
 	 var	BOARDWIDTH    		= 10;
 	 var	BOARDHEIGHT   		= 20;
 
-	 var 	HORIZONTALMARGIN 	= ( ( WINDOWWIDTH - ( BOARDWIDTH * BOXSIZE )) / 2 );
-	 var	TOPMARGIN			= ( ( WINDOWHEIGHT - ( BOARDHEIGHT * BOXSIZE )) - 5 );
+	 var 	HORIZONTALMARGIN 	= ( ( WINDOWWIDTH - ( BOARDWIDTH * BOXSIZE ) ) / 2 );
+	 var	TOPMARGIN			= ( ( WINDOWHEIGHT - ( BOARDHEIGHT * BOXSIZE ) ) - 5 );
 
 	 var	PIECEWIDTH			= 5;
 	 var 	PIECEHEIGHT			= 5;
@@ -87,17 +87,19 @@ function main(canvas_id) {
 	 *
 	 */
 
-	 var    BLACK 				= "#000000";
-	 var	WHITE				= "#ffffff";
-	 var	RED 				= "b32400";
-	 var 	BLUE				= "005ce6";
+	 var    BLACK 				= "#000000" ;
+	 var	WHITE				= "#ffffff" ;
+	 var	RED 				= "b32400"  ;
+	 var 	BLUE				= "005ce6"  ;
+
+	 var 	colors 				= [ BLACK, RED, BLUE ];
 
 	 var 	globalPosition_X 	= 2; 
 	 var 	globalPosition_Y 	= 2;
 		
-	 var 	rotation 			= I_SHAPE[0];
-	 var 	canvas 				= document.getElementById(canvas_id);
-	 var 	ctx 				= canvas.getContext("2d");
+	 var 	pieces	 			= [ CUBE_SHAPE, I_SHAPE, Z_SHAPE, S_SHAPE ];
+	 var 	canvas 				= document.getElementById( canvas_id );
+	 var 	ctx 				= canvas.getContext( "2d" );
 
 
 	 	//  function init(canvas_id) { 
@@ -113,13 +115,6 @@ function main(canvas_id) {
 
 
 	  // main loop
-
-
-	    function piece() {
-	  	this.x = 0;
-	  	this.y = 3;
-	  	this.rotation = rotation;
-	  }
 
 	  var testPiece = new piece();
 
@@ -157,8 +152,6 @@ function main(canvas_id) {
 		}
 	}
 
-
-
 	function drawFrame(globalX, globalY, x, y, fillstyle) {
 			// window.requestAnimationFrame( drawFrame );
 			// drawing code here
@@ -175,11 +168,6 @@ function main(canvas_id) {
 }
 
 
-
-// function getNewPiece() {
-
-// }
-
 function initGameBoard() {
 	var gameBoard = [];
 
@@ -189,26 +177,25 @@ function initGameBoard() {
 	}
 }	
 
-function addPieceToGameBoard(gameBoard, piece, block) {
+function addPieceToGameBoard(gameBoard, piece) {
 	for ( let x = 0; x < PIECEWIDTH; ++x) {
 		for ( let y = 0; y < PIECEHEIGHT; ++y ) {
-			if ( piece[y][x] != false ) {
-				gameBoard[ x + globalPosition_X ][ y + globalPosition_Y ] = block;
+			if ( piece.rotation[y][x] != false ) {
+				gameBoard[ x + piece.x ][ y + piece.y ] = piece.color;
 			}
 		}
 	}
 }
 
-var Block = function(ctx) {
-	this.size 		= 20;
-	this.color 		= '';
-	this.currentX 	= 0;
-	this.currentY 	= 0;
+function getNewPiece(piece, colors) {
+	var Piece = { currentPiece 	: gamePieces[Math.floor(Math.random() * gamePieces.length)],
+				  rotation 		: currentPiece[Math.floor(Math.random() * piece.length)];
+				  color 		: colors[Math.floor(Math.random() * 3)], 
+				  x 			: 0, 
+				  y 			: 0 
+				};
 
-	this.drawMe = function(ctx) {
-		ctx.fillStyle = this.color;
-				
-	}
+	return new Piece;
 }
 
 
