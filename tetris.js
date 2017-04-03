@@ -8,12 +8,14 @@ var S_SHAPE = 		[
 							[0,1,1,0,0],
 							[0,0,0,0,0],
 							[0,0,0,0,0],
+							[0,0,0,0,0]
 						],
 
 						[	
 							[0,1,0,0,0],
 							[0,1,1,0,0],
 							[0,0,1,0,0],
+							[0,0,0,0,0],
 							[0,0,0,0,0]
 						]		
 					]
@@ -23,6 +25,7 @@ var Z_SHAPE = 		[
 							[0,1,1,0,0],
 							[0,0,1,1,0],
 							[0,0,0,0,0],
+							[0,0,0,0,0],
 							[0,0,0,0,0]
 						],
 
@@ -30,6 +33,7 @@ var Z_SHAPE = 		[
 							[0,0,1,0,0],
 							[0,1,1,0,0],
 							[0,1,0,0,0],
+							[0,0,0,0,0],
 							[0,0,0,0,0]
 						]
 					]
@@ -48,6 +52,7 @@ var I_SHAPE =		[
 							[0,0,0,0,0],
 							[0,0,0,0,0],
 							[1,1,1,1,0],
+							[0,0,0,0,0],
 							[0,0,0,0,0]
 						]
 					]
@@ -89,10 +94,10 @@ function main(canvas_id) {
 
 	 var    BLACK 				= "#000000" ;
 	 var	WHITE				= "#ffffff" ;
-	 var	RED 				= "b32400"  ;
-	 var 	BLUE				= "005ce6"  ;
+	 var	RED 				= "B32400"  ;
+	 var 	BLUE				= "005CE6"  ;
 
-	 var 	colors 				= [ BLACK, RED, BLUE ];
+	 var 	colors 				= [ RED, BLUE ];
 
 	 var 	globalPosition_X 	= 2; 
 	 var 	globalPosition_Y 	= 2;
@@ -116,12 +121,11 @@ function main(canvas_id) {
 
 	  // main loop
 
-	  var testPiece = new piece();
+	  var testPiece =  NewPiece(pieces, colors);
 
 	  function update() {
-	  	if ( testPiece.y < 200 ) { 
-	  	testPiece.y += 10;
-
+	  	if ( testPiece.y < 20 ) { 
+	  	testPiece.y += 1;
 	  	}
 	  	
 	  }
@@ -146,7 +150,7 @@ function main(canvas_id) {
 		for ( let x = 0; x < 5; ++x ) {
 			for ( let y = 0; y < 5; ++y ) {
 				if ( piece.rotation[y][x] != false) {
-					drawFrame( (piece.x * globalPosition_X) + 1, (piece.y * globalPosition_Y) + 1, BOXSIZE * globalPosition_X, BOXSIZE * globalPosition_Y, RED);
+					drawFrame( (x + piece.x) * BOXSIZE, (y + piece.y) * BOXSIZE, BOXSIZE, BOXSIZE, "red");
 				}
 			}
 		}
@@ -158,7 +162,7 @@ function main(canvas_id) {
 			
 			// ctx.beginPath();
 			ctx.fillStyle = fillstyle;
-			ctx.fillRect(globalX, globalY, x, y);
+			ctx.fillRect(globalX, globalY, BOXSIZE - 1, BOXSIZE - 1);
 			// ctx.closePath();
 			// ctx.fill();
 			
@@ -187,13 +191,16 @@ function addPieceToGameBoard(gameBoard, piece) {
 	}
 }
 
-function getNewPiece(piece, colors) {
-	var Piece = { currentPiece 	: gamePieces[Math.floor(Math.random() * gamePieces.length)],
-				  rotation 		: currentPiece[Math.floor(Math.random() * piece.length)];
-				  color 		: colors[Math.floor(Math.random() * 3)], 
-				  x 			: 0, 
-				  y 			: 0 
-				};
+function NewPiece(piece, colors) {
+
+	var Piece = function() {
+
+		this.piece 		= piece[Math.floor(Math.random() * piece.length)];
+		this.rotation 	= this.piece[Math.floor(Math.random() * this.piece.length)];
+		this.color 		= colors[Math.floor(Math.random() * 3)];
+		this.x 			= 13;
+		this.y 			= 0;
+	}
 
 	return new Piece;
 }
