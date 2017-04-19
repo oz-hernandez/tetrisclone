@@ -4,36 +4,35 @@
 
 var S_SHAPE = 		[
 						[
+							[0,0,0,0,0],
 							[0,0,1,1,0],
 							[0,1,1,0,0],
 							[0,0,0,0,0],
 							[0,0,0,0,0],
-							[0,0,0,0,0]
 						],
 
 						[	
+							[0,0,0,0,0],
 							[0,1,0,0,0],
 							[0,1,1,0,0],
 							[0,0,1,0,0],
-							[0,0,0,0,0],
 							[0,0,0,0,0]
 						]		
 					]
 
 var Z_SHAPE = 		[	
 						[
+							[0,0,0,0,0],
 							[0,1,1,0,0],
 							[0,0,1,1,0],
-							[0,0,0,0,0],
 							[0,0,0,0,0],
 							[0,0,0,0,0]
 						],
 
-						[	
+						[	[0,0,0,0,0],
 							[0,0,1,0,0],
 							[0,1,1,0,0],
 							[0,1,0,0,0],
-							[0,0,0,0,0],
 							[0,0,0,0,0]
 						]
 					]
@@ -99,6 +98,11 @@ function main(canvas_id) {
 
 	 var 	colors 				= [ RED, BLUE ];
 
+	 var	LEFT_KEY			= "37";
+	 var	UP_KEY				= "38";
+	 var 	RIGHT_KEY			= "39";
+	 var 	DOWN_KEY			= "40";
+
 	 var 	globalPosition_X 	= 2; 
 	 var 	globalPosition_Y 	= 2;
 		
@@ -116,15 +120,22 @@ function main(canvas_id) {
 	  // }
 
 	  // init(canvas_id);
-	  // var board = initGameBoard();
+	  // var gameBoard = initGameBoard();
 
 
 	  // main loop
 
 	  var testPiece =  NewPiece(pieces, colors);
 
-	  function update() {
-	  	if ( testPiece.y < 20 ) { 
+	  function update(gameBoard) {
+	  	// check which direction the piece is goin to move
+	  	// check whether the piece will hit anythin in the direction it's moving.
+	  	// if not hitting anything, move the piece in the direction requested by the keyboard
+	  	// EX: move to the left: if (gameBoard[testPiece.x - 1][testPiece.y] != false)
+
+	  	document.onkeydown = checkKey;
+
+	  	if ( testPiece.y < 21 ) { 
 	  	testPiece.y += 1;
 	  	}
 	  	
@@ -147,10 +158,11 @@ function main(canvas_id) {
 	  gameLoop();
 
 	function drawPiece(piece) {
+		var color = ["red"];
 		for ( let x = 0; x < 5; ++x ) {
 			for ( let y = 0; y < 5; ++y ) {
 				if ( piece.rotation[y][x] != false) {
-					drawFrame( (x + piece.x) * BOXSIZE, (y + piece.y) * BOXSIZE, BOXSIZE, BOXSIZE, "red");
+					drawFrame( (x + piece.x) * BOXSIZE, (y + piece.y) * BOXSIZE, BOXSIZE, BOXSIZE, color[0]);
 				}
 			}
 		}
@@ -188,6 +200,12 @@ function addPieceToGameBoard(gameBoard, piece) {
 				gameBoard[ x + piece.x ][ y + piece.y ] = piece.color;
 			}
 		}
+	}
+}
+
+function checkKey(e) {
+	if ( e.keycode == LEFT_KEY ) {
+
 	}
 }
 
