@@ -66,6 +66,11 @@ var CUBE_SHAPE = 	[
 						]
 					]
 
+	 var	LEFT_KEY			= 37;
+	 var	UP_KEY				= 38;
+	 var 	RIGHT_KEY			= 39;
+	 var 	DOWN_KEY			= 40;
+
 function main(canvas_id) {
 
 	/*
@@ -98,10 +103,7 @@ function main(canvas_id) {
 
 	 var 	colors 				= [ RED, BLUE ];
 
-	 var	LEFT_KEY			= "37";
-	 var	UP_KEY				= "38";
-	 var 	RIGHT_KEY			= "39";
-	 var 	DOWN_KEY			= "40";
+	 
 
 	 var 	globalPosition_X 	= 2; 
 	 var 	globalPosition_Y 	= 2;
@@ -109,6 +111,12 @@ function main(canvas_id) {
 	 var 	pieces	 			= [ CUBE_SHAPE, I_SHAPE, Z_SHAPE, S_SHAPE ];
 	 var 	canvas 				= document.getElementById( canvas_id );
 	 var 	ctx 				= canvas.getContext( "2d" );
+
+	 function clearScreen() {
+	 	ctx.clearRect(0,0,WINDOWWIDTH,WINDOWHEIGHT);
+	  	ctx.fillStyle = BLACK;
+	  	ctx.fillRect(0,0,WINDOWWIDTH,WINDOWHEIGHT);
+	 }
 
 
 	 	//  function init(canvas_id) { 
@@ -120,38 +128,43 @@ function main(canvas_id) {
 	  // }
 
 	  // init(canvas_id);
-	  // var gameBoard = initGameBoard();
+	  // var gameBoard = initGameBoard(BOARDHEIGHT, BOARDWIDTH);
 
 
 	  // main loop
 
 	  var testPiece =  NewPiece(pieces, colors);
 
-	  function update(gameBoard) {
+	  function update(piece) {
 	  	// check which direction the piece is goin to move
 	  	// check whether the piece will hit anythin in the direction it's moving.
 	  	// if not hitting anything, move the piece in the direction requested by the keyboard
 	  	// EX: move to the left: if (gameBoard[testPiece.x - 1][testPiece.y] != false)
 
 	  	document.onkeydown = checkKey;
-
-	  	if ( testPiece.y < 21 ) { 
-	  	testPiece.y += 1;
-	  	}
-	  	
+	  	piece.y += 1;
+		
+	  	function checkKey(e) {
+			if ( e.keyCode == LEFT_KEY ) {
+				piece.x -= 1;
+				clearScreen();
+				drawPiece(piece);
+			}
+			else if ( e.keyCode == RIGHT_KEY ) {
+				// move right
+			}
+		}
 	  }
 
-	  function gameLoop() {
-	  	
-	  	ctx.clearRect(0,0,WINDOWWIDTH,WINDOWHEIGHT);
-	  	ctx.fillStyle = BLACK;
-	  	ctx.fillRect(0,0,WINDOWWIDTH,WINDOWHEIGHT);
-	  	update();
+	function gameLoop() {
+		clearScreen();
+	  	update(testPiece);
+
 	  	drawPiece(testPiece);
 	  	
 	  	setTimeout(function () {
 	  		requestAnimationFrame(gameLoop);
-	  	}, 1000 * 0.80)
+	  	}, 1000 * 0.70)
 	  }
 	
 
@@ -162,17 +175,15 @@ function main(canvas_id) {
 		for ( let x = 0; x < 5; ++x ) {
 			for ( let y = 0; y < 5; ++y ) {
 				if ( piece.rotation[y][x] != false) {
-					drawFrame( (x + piece.x) * BOXSIZE, (y + piece.y) * BOXSIZE, BOXSIZE, BOXSIZE, color[0]);
+					drawBox( (x + piece.x) * BOXSIZE, (y + piece.y) * BOXSIZE, BOXSIZE, BOXSIZE, color[0]);
 				}
 			}
 		}
 	}
 
-	function drawFrame(globalX, globalY, x, y, fillstyle) {
-			// window.requestAnimationFrame( drawFrame );
+	function drawBox(globalX, globalY, x, y, fillstyle) {
 			// drawing code here
-			
-			// ctx.beginPath();
+		
 			ctx.fillStyle = fillstyle;
 			ctx.fillRect(globalX, globalY, BOXSIZE - 1, BOXSIZE - 1);
 			// ctx.closePath();
@@ -184,14 +195,14 @@ function main(canvas_id) {
 }
 
 
-function initGameBoard() {
-	var gameBoard = [];
+// function initGameBoard(boardheight, boardwidth) {
+// 	var gameBoard = [];
 
-	for ( let i = 0; i < BOARDWIDTH; ++i ) {
-		gameBoard[i] = ( [false] * BOARDHEIGHT );
-	return new gameBoard;
-	}
-}	
+// 	for ( let i = 0; i < boardwidth; ++i ) {
+// 		gameBoard[i] = ( [false] * boardheight );
+// 	return new gameBoard;
+// 	}
+// }	
 
 function addPieceToGameBoard(gameBoard, piece) {
 	for ( let x = 0; x < PIECEWIDTH; ++x) {
@@ -200,12 +211,6 @@ function addPieceToGameBoard(gameBoard, piece) {
 				gameBoard[ x + piece.x ][ y + piece.y ] = piece.color;
 			}
 		}
-	}
-}
-
-function checkKey(e) {
-	if ( e.keycode == LEFT_KEY ) {
-
 	}
 }
 
@@ -219,7 +224,6 @@ function NewPiece(piece, colors) {
 		this.x 			= 13;
 		this.y 			= 0;
 	}
-
 	return new Piece;
 }
 
