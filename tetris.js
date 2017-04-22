@@ -183,6 +183,10 @@ function main(canvas_id) {
 	}
 }
 
+function validPosition(gameboard, piece) {
+	
+}
+
 function initGameBoard(boardheight, boardwidth) {
 	var gameBoard = function() {
 		this.board = [];
