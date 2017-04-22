@@ -183,8 +183,21 @@ function main(canvas_id) {
 	}
 }
 
-function validPosition(gameboard, piece) {
-	
+function validPosition(gameboard, piece, adjacentX, adjacentY) {
+	for ( let x = 0; x < BOARDWIDTH; ++x ) {
+		for ( let y = 0; y < BOARDHEIGHT; ++y ) {
+
+			// check for block
+			if ( !piece.rotation[y][x] )
+				continue;
+			// check playfield area
+			if ( !( x >= 0 && x < BOARDWIDTH && y < BOARDHEIGHT ) )
+				return false;
+			// check if piece hits another
+			if ( gameboard.board[ x + piece.x + adjacentX ][ y + piece.y + adjacentY ] )
+				return false;
+		}
+	}
 }
 
 function initGameBoard(boardheight, boardwidth) {
