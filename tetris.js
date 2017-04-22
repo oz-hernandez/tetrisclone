@@ -96,12 +96,7 @@ function main(canvas_id) {
 	 *
 	 */
 
-	 var    BLACK 				= "#000000" ;
-	 var	WHITE				= "#ffffff" ;
-	 var	RED 				= "B32400"  ;
-	 var 	BLUE				= "005CE6"  ;
-
-	 var 	colors 				= [ RED, BLUE ];
+	 var 	colors 				= [ "red", "blue", "yellow", "orange", "green" ];
 
 	 
 
@@ -114,7 +109,7 @@ function main(canvas_id) {
 
 	 function clearScreen() {
 	 	ctx.clearRect(0,0,WINDOWWIDTH,WINDOWHEIGHT);
-	  	ctx.fillStyle = BLACK;
+	  	ctx.fillStyle = "black";
 	  	ctx.fillRect(0,0,WINDOWWIDTH,WINDOWHEIGHT);
 	 }
 
@@ -151,8 +146,13 @@ function main(canvas_id) {
 				drawPiece(piece);
 			}
 			else if ( e.keyCode == RIGHT_KEY ) {
-				// move right
+				piece.x += 1;
+				clearScreen();
+				drawPiece(piece);
 			}
+			else if ( e.keyCode == UP_KEY ) {
+				piece.rotation = (piece.rotation + 1) % piece.piece.length;
+			} 
 		}
 	  }
 
@@ -164,7 +164,7 @@ function main(canvas_id) {
 	  	
 	  	setTimeout(function () {
 	  		requestAnimationFrame(gameLoop);
-	  	}, 1000 * 0.70)
+	  	}, 1000 * 0.50)
 	  }
 	
 
@@ -174,23 +174,18 @@ function main(canvas_id) {
 		var color = ["red"];
 		for ( let x = 0; x < 5; ++x ) {
 			for ( let y = 0; y < 5; ++y ) {
-				if ( piece.rotation[y][x] != false) {
-					drawBox( (x + piece.x) * BOXSIZE, (y + piece.y) * BOXSIZE, BOXSIZE, BOXSIZE, color[0]);
+				if ( piece.piece[piece.rotation][y][x] != false) {
+					drawBox( (x + piece.x) * BOXSIZE, (y + piece.y) * BOXSIZE, BOXSIZE, BOXSIZE, piece.color);
 				}
 			}
 		}
 	}
 
 	function drawBox(globalX, globalY, x, y, fillstyle) {
-			// drawing code here
+			// draw each individual box
 		
 			ctx.fillStyle = fillstyle;
 			ctx.fillRect(globalX, globalY, BOXSIZE - 1, BOXSIZE - 1);
-			// ctx.closePath();
-			// ctx.fill();
-			
-			// ctx.fillStyle = fillstyle
-			// ctx.fillRect(globalX, globalY, x, y)	
 	}
 }
 
@@ -207,7 +202,7 @@ function main(canvas_id) {
 function addPieceToGameBoard(gameBoard, piece) {
 	for ( let x = 0; x < PIECEWIDTH; ++x) {
 		for ( let y = 0; y < PIECEHEIGHT; ++y ) {
-			if ( piece.rotation[y][x] != false ) {
+			if ( piece.piece[piece.rotation][y][x] != false ) {
 				gameBoard[ x + piece.x ][ y + piece.y ] = piece.color;
 			}
 		}
@@ -219,8 +214,8 @@ function NewPiece(piece, colors) {
 	var Piece = function() {
 
 		this.piece 		= piece[Math.floor(Math.random() * piece.length)];
-		this.rotation 	= this.piece[Math.floor(Math.random() * this.piece.length)];
-		this.color 		= colors[Math.floor(Math.random() * 3)];
+		this.rotation 	= Math.floor(Math.random() * this.piece.length);
+		this.color 		= colors[Math.floor(Math.random() * 5)];
 		this.x 			= 13;
 		this.y 			= 0;
 	}
