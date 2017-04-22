@@ -90,18 +90,7 @@ function main(canvas_id) {
 	 var	PIECEWIDTH			= 5;
 	 var 	PIECEHEIGHT			= 5;
 
-
-	/*
-	 * 		colors
-	 *
-	 */
-
 	 var 	colors 				= [ "red", "blue", "yellow", "orange", "green" ];
-
-	 
-
-	 var 	globalPosition_X 	= 2; 
-	 var 	globalPosition_Y 	= 2;
 		
 	 var 	pieces	 			= [ CUBE_SHAPE, I_SHAPE, Z_SHAPE, S_SHAPE ];
 	 var 	canvas 				= document.getElementById( canvas_id );
@@ -113,28 +102,10 @@ function main(canvas_id) {
 	  	ctx.fillRect(0,0,WINDOWWIDTH,WINDOWHEIGHT);
 	 }
 
-
-	 	//  function init(canvas_id) { 
-	 		
-
-	 	//  	// var GameBoard = initGameBoard();
-
-	 	 	
-	  // }
-
-	  // init(canvas_id);
-	  // var gameBoard = initGameBoard(BOARDHEIGHT, BOARDWIDTH);
-
-
-	  // main loop
-
-	  var testPiece =  NewPiece(pieces, colors);
+	  var gameBoard 	= initGameBoard(BOARDHEIGHT, BOARDWIDTH);
+	  var currentPiece 	=  NewPiece(pieces, colors);
 
 	  function update(piece) {
-	  	// check which direction the piece is goin to move
-	  	// check whether the piece will hit anythin in the direction it's moving.
-	  	// if not hitting anything, move the piece in the direction requested by the keyboard
-	  	// EX: move to the left: if (gameBoard[testPiece.x - 1][testPiece.y] != false)
 
 	  	document.onkeydown = checkKey;
 	  	piece.y += 1;
@@ -152,30 +123,30 @@ function main(canvas_id) {
 			}
 			else if ( e.keyCode == UP_KEY ) {
 				piece.rotation = (piece.rotation + 1) % piece.piece.length;
+				clearScreen();
+				drawPiece(piece);
 			} 
 		}
 	  }
 
-	function gameLoop() {
-		clearScreen();
-	  	update(testPiece);
-
-	  	drawPiece(testPiece);
+	  // main loop
+	  function gameLoop() {
+	  	clearScreen();
+	  	update(currentPiece);
+	  	drawPiece(currentPiece);
 	  	
 	  	setTimeout(function () {
 	  		requestAnimationFrame(gameLoop);
 	  	}, 1000 * 0.50)
 	  }
 	
-
 	  gameLoop();
 
 	function drawPiece(piece) {
-		var color = ["red"];
 		for ( let x = 0; x < 5; ++x ) {
 			for ( let y = 0; y < 5; ++y ) {
-				if ( piece.piece[piece.rotation][y][x] != false) {
-					drawBox( (x + piece.x) * BOXSIZE, (y + piece.y) * BOXSIZE, BOXSIZE, BOXSIZE, piece.color);
+				if ( piece.piece[piece.rotation][y][x] != false ) {
+					drawBox( (x + piece.x) * BOXSIZE, (y + piece.y) * BOXSIZE, BOXSIZE, BOXSIZE, piece.color );
 				}
 			}
 		}
@@ -183,27 +154,27 @@ function main(canvas_id) {
 
 	function drawBox(globalX, globalY, x, y, fillstyle) {
 			// draw each individual box
-		
 			ctx.fillStyle = fillstyle;
-			ctx.fillRect(globalX, globalY, BOXSIZE - 1, BOXSIZE - 1);
+			ctx.fillRect( globalX, globalY, BOXSIZE - 1, BOXSIZE - 1 );
 	}
 }
 
+function initGameBoard(boardheight, boardwidth) {
+	var gameBoard = function() {
+		this.board = [];
 
-// function initGameBoard(boardheight, boardwidth) {
-// 	var gameBoard = [];
-
-// 	for ( let i = 0; i < boardwidth; ++i ) {
-// 		gameBoard[i] = ( [false] * boardheight );
-// 	return new gameBoard;
-// 	}
-// }	
+		for ( let i = 0; i < boardwidth; ++i ) {
+			this.board[i] = ( [false] * boardheight );
+		}
+		return new gameBoard;
+	}
+}	
 
 function addPieceToGameBoard(gameBoard, piece) {
 	for ( let x = 0; x < PIECEWIDTH; ++x) {
 		for ( let y = 0; y < PIECEHEIGHT; ++y ) {
 			if ( piece.piece[piece.rotation][y][x] != false ) {
-				gameBoard[ x + piece.x ][ y + piece.y ] = piece.color;
+				gameBoard.board[ x + piece.x ][ y + piece.y ] = piece.color;
 			}
 		}
 	}
@@ -221,8 +192,3 @@ function NewPiece(piece, colors) {
 	}
 	return new Piece;
 }
-
-
-
-
-
