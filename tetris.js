@@ -186,18 +186,14 @@ function main(canvas_id) {
 function validPosition(gameboard, piece, adjacentX, adjacentY) {
 	for ( let x = 0; x < BOARDWIDTH; ++x ) {
 		for ( let y = 0; y < BOARDHEIGHT; ++y ) {
-
-			// check for block
-			if ( !piece.rotation[y][x] )
-				continue;
-			// check playfield area
-			if ( !( x >= 0 && x < BOARDWIDTH && y < BOARDHEIGHT ) )
+			if ( piece.rotation[y][x] ) {
+				// check that we're within the gameboard bounds and we're not hitting another piece
+				if ( !( x >= 0 && x < BOARDWIDTH && y < BOARDHEIGHT ) || gameboard.board[x + piece.x + adjacentX][y + piece.y + adjacentY])
 				return false;
-			// check if piece hits another
-			if ( gameboard.board[ x + piece.x + adjacentX ][ y + piece.y + adjacentY ] )
-				return false;
+			}
 		}
 	}
+	return true;
 }
 
 function initGameBoard(boardheight, boardwidth) {
