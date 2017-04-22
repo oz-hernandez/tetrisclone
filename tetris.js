@@ -160,7 +160,7 @@ function main(canvas_id) {
 		for ( let x = 0; x < 5; ++x ) {
 			for ( let y = 0; y < 5; ++y ) {
 				if ( piece.piece[piece.rotation][y][x] != false ) {
-					drawBox( (x + piece.x) * BOXSIZE, (y + piece.y) * BOXSIZE, BOXSIZE, BOXSIZE, piece.color );
+					drawBox( (x + piece.x) * BOXSIZE, (y + piece.y) * BOXSIZE, BOXSIZE - 1, BOXSIZE - 1, piece.color );
 				}
 			}
 		}
@@ -170,7 +170,7 @@ function main(canvas_id) {
 		for ( let x = 0; x < BOARDWIDTH; ++x) {
 			for ( let y = 0; y < BOARDHEIGHT; ++y) {
 				if ( gameboard.board[x][y] ) {
-					drawBox( (HORIZONTALMARGIN + (x * BOXSIZE)), (TOPMARGIN + (y * BOXSIZE)), BOXSIZE, BOXSIZE, gameboard[x][y] );
+					drawBox( (HORIZONTALMARGIN + (x * BOXSIZE)), (TOPMARGIN + (y * BOXSIZE)), BOXSIZE - 1, BOXSIZE - 1, gameboard[x][y] );
 				}
 			}
 		}
@@ -179,7 +179,7 @@ function main(canvas_id) {
 	function drawBox(globalX, globalY, x, y, fillstyle) {
 			// draw each individual box
 			ctx.fillStyle = fillstyle;
-			ctx.fillRect( globalX, globalY, BOXSIZE - 1, BOXSIZE - 1 );
+			ctx.fillRect( globalX, globalY, x, y );
 	}
 }
 
