@@ -2,6 +2,12 @@
 	Tetris
 */
 
+
+/*
+ *	tetris	
+ *
+ */
+
 var S_SHAPE = 		[
 						[
 							[0,0,0,0,0],
@@ -66,17 +72,27 @@ var CUBE_SHAPE = 	[
 						]
 					]
 
+	/*
+	 * 		key events
+	 *
+	 */
+
 	 var	LEFT_KEY			= 37;
 	 var	UP_KEY				= 38;
 	 var 	RIGHT_KEY			= 39;
 	 var 	DOWN_KEY			= 40;
 
-function main(canvas_id) {
 
-	/*
-	 * 	board and shape sizes
-	 *
-	 */
+	 /*
+	  * 	board and shape sizes
+	  *
+	  */
+
+	 var	PIECEWIDTH			= 5;
+	 var 	PIECEHEIGHT			= 5;
+
+	 var 	HORIZONTALMARGIN 	= ( ( WINDOWWIDTH - ( BOARDWIDTH * BOXSIZE ) ) / 2 );
+	 var	TOPMARGIN			= ( ( WINDOWHEIGHT - ( BOARDHEIGHT * BOXSIZE ) ) - 5 );
 
 	 var	WINDOWWIDTH   		= 640;
 	 var 	WINDOWHEIGHT  		= 480;
@@ -84,13 +100,10 @@ function main(canvas_id) {
 	 var	BOARDWIDTH    		= 10;
 	 var	BOARDHEIGHT   		= 20;
 
-	 var 	HORIZONTALMARGIN 	= ( ( WINDOWWIDTH - ( BOARDWIDTH * BOXSIZE ) ) / 2 );
-	 var	TOPMARGIN			= ( ( WINDOWHEIGHT - ( BOARDHEIGHT * BOXSIZE ) ) - 5 );
 
-	 var	PIECEWIDTH			= 5;
-	 var 	PIECEHEIGHT			= 5;
+function main(canvas_id) {
 
-	 var 	colors 				= [ "red", "blue", "yellow", "orange", "green" ];
+	 var 	colors 				= [ "red", "blue", "yellow", "orange", "green", "white", "grey" ];
 		
 	 var 	pieces	 			= [ CUBE_SHAPE, I_SHAPE, Z_SHAPE, S_SHAPE ];
 	 var 	canvas 				= document.getElementById( canvas_id );
@@ -134,6 +147,7 @@ function main(canvas_id) {
 	  	clearScreen();
 	  	update(currentPiece);
 	  	drawPiece(currentPiece);
+	  	drawBoard(gameBoard);
 	  	
 	  	setTimeout(function () {
 	  		requestAnimationFrame(gameLoop);
@@ -147,6 +161,16 @@ function main(canvas_id) {
 			for ( let y = 0; y < 5; ++y ) {
 				if ( piece.piece[piece.rotation][y][x] != false ) {
 					drawBox( (x + piece.x) * BOXSIZE, (y + piece.y) * BOXSIZE, BOXSIZE, BOXSIZE, piece.color );
+				}
+			}
+		}
+	}
+
+	function drawBoard(gameboard) {
+		for ( let x = 0; x < BOARDWIDTH; ++x) {
+			for ( let y = 0; y < BOARDHEIGHT; ++y) {
+				if ( gameboard.board[x][y] ) {
+					drawBox( (HORIZONTALMARGIN + (x * BOXSIZE)), (TOPMARGIN + (y * BOXSIZE)), BOXSIZE, BOXSIZE, gameboard[x][y] );
 				}
 			}
 		}
@@ -166,8 +190,8 @@ function initGameBoard(boardheight, boardwidth) {
 		for ( let i = 0; i < boardwidth; ++i ) {
 			this.board[i] = ( [false] * boardheight );
 		}
-		return new gameBoard;
 	}
+	return new gameBoard;
 }	
 
 function addPieceToGameBoard(gameBoard, piece) {
@@ -186,7 +210,7 @@ function NewPiece(piece, colors) {
 
 		this.piece 		= piece[Math.floor(Math.random() * piece.length)];
 		this.rotation 	= Math.floor(Math.random() * this.piece.length);
-		this.color 		= colors[Math.floor(Math.random() * 5)];
+		this.color 		= colors[Math.floor(Math.random() * 7)];
 		this.x 			= 13;
 		this.y 			= 0;
 	}
