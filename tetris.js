@@ -91,14 +91,14 @@ var CUBE_SHAPE = 	[
 	 var	PIECEWIDTH			= 5;
 	 var 	PIECEHEIGHT			= 5;
 
-	 var 	HORIZONTALMARGIN 	= ( ( WINDOWWIDTH - ( BOARDWIDTH * BOXSIZE ) ) / 2 );
-	 var	TOPMARGIN			= ( ( WINDOWHEIGHT - ( BOARDHEIGHT * BOXSIZE ) ) - 5 );
-
 	 var	WINDOWWIDTH   		= 640;
 	 var 	WINDOWHEIGHT  		= 480;
 	 var	BOXSIZE				= 20;
 	 var	BOARDWIDTH    		= 10;
 	 var	BOARDHEIGHT   		= 20;
+
+	 var 	HORIZONTALMARGIN 	= ( ( WINDOWWIDTH - ( BOARDWIDTH * BOXSIZE ) ) / 2 );
+	 var	TOPMARGIN			= ( ( WINDOWHEIGHT - ( BOARDHEIGHT * BOXSIZE ) ) - 5 );
 
 
 function main(canvas_id) {
@@ -118,13 +118,13 @@ function main(canvas_id) {
 	  var gameBoard 	= initGameBoard(BOARDHEIGHT, BOARDWIDTH);
 	  var currentPiece 	=  NewPiece(pieces, colors);
 
-	  function update(piece) {
+	  function update(gameboard, piece) {
 
 	  	document.onkeydown = checkKey;
 	  	piece.y += 1;
 		
 	  	function checkKey(e) {
-			if ( e.keyCode == LEFT_KEY ) {
+			if ( e.keyCode == LEFT_KEY && validPosition( gameboard, piece, adjacentX = -1 ) ) {
 				piece.x -= 1;
 				clearScreen();
 				drawPiece(piece);
@@ -145,7 +145,7 @@ function main(canvas_id) {
 	  // main loop
 	  function gameLoop() {
 	  	clearScreen();
-	  	update(currentPiece);
+	  	update(gameBoard, currentPiece);
 	  	drawPiece(currentPiece);
 	  	drawBoard(gameBoard);
 	  	
@@ -160,7 +160,8 @@ function main(canvas_id) {
 		for ( let x = 0; x < 5; ++x ) {
 			for ( let y = 0; y < 5; ++y ) {
 				if ( piece.piece[piece.rotation][y][x] != false ) {
-					drawBox( (x + piece.x) * BOXSIZE, (y + piece.y) * BOXSIZE, BOXSIZE - 1, BOXSIZE - 1, piece.color );
+					drawBox( (HORIZONTALMARGIN + (piece.x * BOXSIZE)) + (x * BOXSIZE), (TOPMARGIN + (piece.y * BOXSIZE)) + (y * BOXSIZE), 
+								BOXSIZE - 1, BOXSIZE - 1, piece.color );
 				}
 			}
 		}
@@ -170,7 +171,7 @@ function main(canvas_id) {
 		for ( let x = 0; x < BOARDWIDTH; ++x) {
 			for ( let y = 0; y < BOARDHEIGHT; ++y) {
 				if ( gameboard.board[x][y] ) {
-					drawBox( (HORIZONTALMARGIN + (x * BOXSIZE)), (TOPMARGIN + (y * BOXSIZE)), BOXSIZE - 1, BOXSIZE - 1, gameboard[x][y] );
+					drawBox( (HORIZONTALMARGIN + (x)), (TOPMARGIN + (y)), BOXSIZE - 1, BOXSIZE - 1, gameboard[x][y] );
 				}
 			}
 		}
@@ -183,25 +184,28 @@ function main(canvas_id) {
 	}
 }
 
-function validPosition(gameboard, piece, adjacentX, adjacentY) {
-	for ( let x = 0; x < BOARDWIDTH; ++x ) {
-		for ( let y = 0; y < BOARDHEIGHT; ++y ) {
-			if ( piece.rotation[y][x] ) {
-				// check that we're within the gameboard bounds and we're not hitting another piece
-				if ( !( x >= 0 && x < BOARDWIDTH && y < BOARDHEIGHT ) || gameboard.board[x + piece.x + adjacentX][y + piece.y + adjacentY])
-				return false;
+function validPosition(gameboard, piece, adjacentX=0, adjacentY=0) {
+	for ( let x = 0; x < PIECEWIDTH; ++x ) {
+		for ( let y = 0; y < PIECEHEIGHT; ++y ) {
+			if ( piece.piece[piece.rotation][y][x] ) {
+				// check that we're within board bounds and not hitting another piece
+				if ( !( x >= 0 && x < BOARDWIDTH && y < BOARDHEIGHT ) || gameboard.board[x + piece.x + adjacentX][y + piece.y + adjacentY] )
+					return false;
 			}
 		}
 	}
 	return true;
 }
 
-function initGameBoard(boardheight, boardwidth) {
+function initGameBoard() {
 	var gameBoard = function() {
 		this.board = [];
-
-		for ( let i = 0; i < boardwidth; ++i ) {
-			this.board[i] = ( [false] * boardheight );
+		// creating multidimensional arrays in javascript is weird :/
+		for ( let i = 0; i < BOARDWIDTH; ++i ) {
+			this.board[i] = [];
+			for ( let j = 0; j < BOARDHEIGHT; ++j ) {
+				this.board[i][j] = false;
+			}
 		}
 	}
 	return new gameBoard;
@@ -224,7 +228,7 @@ function NewPiece(piece, colors) {
 		this.piece 		= piece[Math.floor(Math.random() * piece.length)];
 		this.rotation 	= Math.floor(Math.random() * this.piece.length);
 		this.color 		= colors[Math.floor(Math.random() * 7)];
-		this.x 			= 13;
+		this.x 			= (BOARDWIDTH / 2) - (PIECEWIDTH / 2);
 		this.y 			= 0;
 	}
 	return new Piece;
