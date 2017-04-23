@@ -129,7 +129,7 @@ function main(canvas_id) {
 				clearScreen();
 				drawPiece(piece);
 			}
-			else if ( e.keyCode == RIGHT_KEY ) {
+			else if ( e.keyCode == RIGHT_KEY && validPosition( gameboard, piece, adjacentX = 1)) {
 				piece.x += 1;
 				clearScreen();
 				drawPiece(piece);
@@ -160,8 +160,9 @@ function main(canvas_id) {
 		for ( let x = 0; x < 5; ++x ) {
 			for ( let y = 0; y < 5; ++y ) {
 				if ( piece.piece[piece.rotation][y][x] != false ) {
-					drawBox( (HORIZONTALMARGIN + (piece.x * BOXSIZE)) + (x * BOXSIZE), (TOPMARGIN + (piece.y * BOXSIZE)) + (y * BOXSIZE), 
-								BOXSIZE - 1, BOXSIZE - 1, piece.color );
+					drawBox( (HORIZONTALMARGIN + (piece.x * BOXSIZE)) + (x * BOXSIZE), 
+							 (TOPMARGIN + (piece.y * BOXSIZE)) + (y * BOXSIZE), 
+							  BOXSIZE - 1, BOXSIZE - 1, piece.color );
 				}
 			}
 		}
@@ -228,7 +229,7 @@ function NewPiece(piece, colors) {
 		this.piece 		= piece[Math.floor(Math.random() * piece.length)];
 		this.rotation 	= Math.floor(Math.random() * this.piece.length);
 		this.color 		= colors[Math.floor(Math.random() * 7)];
-		this.x 			= (BOARDWIDTH / 2) - (PIECEWIDTH / 2);
+		this.x 			= 3;
 		this.y 			= 0;
 	}
 	return new Piece;
