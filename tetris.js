@@ -116,11 +116,20 @@ function main(canvas_id) {
 	 }
 
 	  var gameBoard 	= initGameBoard(BOARDHEIGHT, BOARDWIDTH);
-	  var currentPiece 	=  NewPiece(pieces, colors);
+	  var currentPiece 	= NewPiece(pieces, colors);
+	  var nextPiece		= NewPiece(pieces, colors);
+	  var needNewPiece 	= false;
 
 	  function update(gameboard, piece) {
 	  	document.onkeydown = checkKey;
-	  	piece.y += 1;
+
+	  	// add piece to board if on top of another or if piece has reached the bottom of the board
+	  	if ( !validPosition( gameboard, piece, adjacentY = 1) || !(piece.y < 16)) {
+	  		addPieceToGameBoard(gameboard, piece);
+	  		needNewPiece = true;
+	  	}
+	  	else 
+	  		piece.y += 1;
 		
 	  	function checkKey(e) {
 
@@ -160,6 +169,10 @@ function main(canvas_id) {
 	  	update(gameBoard, currentPiece);
 	  	drawPiece(currentPiece);
 	  	drawBoard(gameBoard);
+	  	if (needNewPiece) {
+	  		currentPiece = nextPiece;
+	  		nextPiece = NewPiece(pieces, colors);
+	  	}
 	  	
 	  	setTimeout(function () {
 	  		requestAnimationFrame(gameLoop);
