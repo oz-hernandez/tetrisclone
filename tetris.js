@@ -120,10 +120,18 @@ function main(canvas_id) {
 
 	  function update(gameboard, piece) {
 
+
+
 	  	document.onkeydown = checkKey;
 	  	piece.y += 1;
 		
 	  	function checkKey(e) {
+
+	  		// don't accept input until piece has entered the gameboard
+	  		if (piece.y == 0) {
+	  			return;
+	  		}
+
 			if ( e.keyCode == LEFT_KEY && validPosition( gameboard, piece, adjacentX = -1 ) ) {
 				piece.x -= 1;
 				clearScreen();
@@ -136,6 +144,11 @@ function main(canvas_id) {
 			}
 			else if ( e.keyCode == UP_KEY ) {
 				piece.rotation = (piece.rotation + 1) % piece.piece.length;
+				clearScreen();
+				drawPiece(piece);
+			}
+			else if (e.keyCode == DOWN_KEY ) {
+				piece.y += 1;
 				clearScreen();
 				drawPiece(piece);
 			} 
