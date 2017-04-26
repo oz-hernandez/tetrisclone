@@ -119,9 +119,6 @@ function main(canvas_id) {
 	  var currentPiece 	=  NewPiece(pieces, colors);
 
 	  function update(gameboard, piece) {
-
-
-
 	  	document.onkeydown = checkKey;
 	  	piece.y += 1;
 		
@@ -129,6 +126,8 @@ function main(canvas_id) {
 
 	  		// don't accept input until piece has entered the gameboard
 	  		if (piece.y == 0) {
+	  			// maybe write a check here to see if new piece will collide with another
+	  			// which probably means the game is over
 	  			return;
 	  		}
 
@@ -137,7 +136,7 @@ function main(canvas_id) {
 				clearScreen();
 				drawPiece(piece);
 			}
-			else if ( e.keyCode == RIGHT_KEY && validPosition( gameboard, piece, adjacentX = 1)) {
+			else if ( e.keyCode == RIGHT_KEY && validPosition( gameboard, piece, adjacentX = 1 ) ) {
 				piece.x += 1;
 				clearScreen();
 				drawPiece(piece);
@@ -147,7 +146,7 @@ function main(canvas_id) {
 				clearScreen();
 				drawPiece(piece);
 			}
-			else if (e.keyCode == DOWN_KEY ) {
+			else if ( e.keyCode == DOWN_KEY && validPosition( gameboard, piece, adjacentY = 1 ) ) {
 				piece.y += 1;
 				clearScreen();
 				drawPiece(piece);
