@@ -11,10 +11,10 @@
 var S_SHAPE = 		[
 						[
 							[0,0,0,0,0],
+							[0,0,0,0,0],
 							[0,0,1,1,0],
 							[0,1,1,0,0],
-							[0,0,0,0,0],
-							[0,0,0,0,0],
+							[0,0,0,0,0]
 						],
 
 						[	
@@ -29,9 +29,9 @@ var S_SHAPE = 		[
 var Z_SHAPE = 		[	
 						[
 							[0,0,0,0,0],
+							[0,0,0,0,0],
 							[0,1,1,0,0],
 							[0,0,1,1,0],
-							[0,0,0,0,0],
 							[0,0,0,0,0]
 						],
 
@@ -56,8 +56,8 @@ var I_SHAPE =		[
 						[
 							[0,0,0,0,0],
 							[0,0,0,0,0],
-							[1,1,1,1,0],
 							[0,0,0,0,0],
+							[1,1,1,1,0],
 							[0,0,0,0,0]
 						]
 					]
@@ -65,9 +65,9 @@ var I_SHAPE =		[
 var CUBE_SHAPE = 	[
 						[
 							[0,0,0,0,0],
-							[0,1,1,0,0],
-							[0,1,1,0,0],
 							[0,0,0,0,0],
+							[0,1,1,0,0],
+							[0,1,1,0,0],
 							[0,0,0,0,0]
 						]
 					]
@@ -96,6 +96,7 @@ var CUBE_SHAPE = 	[
 	 var	BOXSIZE				= 20;
 	 var	BOARDWIDTH    		= 10;
 	 var	BOARDHEIGHT   		= 20;
+	 var 	HEIGHT 				= 25;
 
 	 var 	HORIZONTALMARGIN 	= ( ( WINDOWWIDTH - ( BOARDWIDTH * BOXSIZE ) ) / 2 );
 	 var	TOPMARGIN			= ( ( WINDOWHEIGHT - ( BOARDHEIGHT * BOXSIZE ) ) - 5 );
@@ -110,9 +111,10 @@ function main(canvas_id) {
 	 var 	ctx 				= canvas.getContext( "2d" );
 
 	 function clearScreen() {
+	
 	 	ctx.clearRect(0,0,WINDOWWIDTH,WINDOWHEIGHT);
 	  	ctx.fillStyle = "black";
-	  	ctx.fillRect(0,0,WINDOWWIDTH,WINDOWHEIGHT);
+	  	ctx.fillRect(HORIZONTALMARGIN,TOPMARGIN,BOXSIZE * BOARDWIDTH,BOXSIZE * HEIGHT);
 	 }
 
 	  var gameBoard 	= initGameBoard(BOARDHEIGHT, BOARDWIDTH);
@@ -124,7 +126,7 @@ function main(canvas_id) {
 	  	document.onkeydown = checkKey;
 
 	  	// add piece to board if on top of another or if piece has reached the bottom of the board
-	  	if ( !validPosition( gameboard, piece, adjacentY = 1) || !(piece.y < 16)) {
+	  	if ( !validPosition( gameboard, piece, adjacentY = 1) || piece.y >= BOARDHEIGHT) {
 	  		addPieceToGameBoard(gameboard, piece);
 	  		needNewPiece = true;
 	  	}
@@ -150,6 +152,7 @@ function main(canvas_id) {
 				clearScreen();
 				drawPiece(piece);
 			}
+			// TODO: check that piece doesn't go out of bounds if rotated
 			else if ( e.keyCode == UP_KEY ) {
 				piece.rotation = (piece.rotation + 1) % piece.piece.length;
 				clearScreen();
@@ -165,6 +168,7 @@ function main(canvas_id) {
 
 	  // main loop
 	  function gameLoop() {
+	  	needNewPiece = false;
 	  	clearScreen();
 	  	update(gameBoard, currentPiece);
 	  	drawPiece(currentPiece);
@@ -197,7 +201,7 @@ function main(canvas_id) {
 		for ( let x = 0; x < BOARDWIDTH; ++x) {
 			for ( let y = 0; y < BOARDHEIGHT; ++y) {
 				if ( gameboard.board[x][y] ) {
-					drawBox( (HORIZONTALMARGIN + (x)), (TOPMARGIN + (y)), BOXSIZE - 1, BOXSIZE - 1, gameboard[x][y] );
+					drawBox( (HORIZONTALMARGIN + x), (TOPMARGIN + y), BOXSIZE - 1, BOXSIZE - 1, gameboard[x][y] );
 				}
 			}
 		}
