@@ -155,6 +155,9 @@ function main(canvas_id) {
 			// TODO: check that piece doesn't go out of bounds if rotated
 			else if ( e.keyCode == UP_KEY ) {
 				piece.rotation = (piece.rotation + 1) % piece.piece.length;
+				if ( !validPosition( gameboard, piece ) ) {
+					piece.rotation = (piece.rotation + 1) % piece.piece.length;
+				}
 				clearScreen();
 				drawPiece(piece);
 			}
@@ -250,7 +253,7 @@ function addPieceToGameBoard(gameBoard, piece) {
 	for ( let x = 0; x < PIECEWIDTH; ++x) {
 		for ( let y = 0; y < PIECEHEIGHT; ++y ) {
 			if ( piece.piece[piece.rotation][y][x] != false ) {
-				gameBoard.board[ x + piece.x ][ y + piece.y ] = piece.color;
+				gameBoard.board[ piece.x ][ piece.y ] = piece.color;
 			}
 		}
 	}
