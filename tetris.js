@@ -191,7 +191,7 @@ function main(canvas_id) {
 	function drawPiece(piece) {
 		for ( let x = 0; x < 5; ++x ) {
 			for ( let y = 0; y < 5; ++y ) {
-				if ( piece.piece[piece.rotation][y][x] != false ) {
+				if ( piece.piece[piece.rotation][y][x] ) {
 					drawBox( (HORIZONTALMARGIN + (piece.x * BOXSIZE)) + (x * BOXSIZE), 
 							 (TOPMARGIN + (piece.y * BOXSIZE)) + (y * BOXSIZE), 
 							  BOXSIZE - 1, BOXSIZE - 1, piece.color );
@@ -252,7 +252,7 @@ function initGameBoard() {
 function addPieceToGameBoard(gameBoard, piece) {
 	for ( let x = 0; x < PIECEWIDTH; ++x) {
 		for ( let y = 0; y < PIECEHEIGHT; ++y ) {
-			if ( piece.piece[piece.rotation][y][x] != false ) {
+			if ( piece.piece[piece.rotation][y][x] ) {
 				gameBoard.board[ x + piece.x ][ y + piece.y ] = piece.color;
 			}
 		}
