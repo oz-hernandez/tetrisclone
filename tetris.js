@@ -96,7 +96,7 @@ var CUBE_SHAPE = 	[
 	 var	BOXSIZE				= 20;
 	 var	BOARDWIDTH    		= 10;
 	 var	BOARDHEIGHT   		= 20;
-	 var 	HEIGHT 				= 25;
+	 var 	HEIGHT 				= 21;
 
 	 var 	HORIZONTALMARGIN 	= ( ( WINDOWWIDTH - ( BOARDWIDTH * BOXSIZE ) ) / 2 );
 	 var	TOPMARGIN			= ( ( WINDOWHEIGHT - ( BOARDHEIGHT * BOXSIZE ) ) - 5 );
@@ -126,7 +126,7 @@ function main(canvas_id) {
 	  	document.onkeydown = checkKey;
 
 	  	// add piece to board if on top of another or if piece has reached the bottom of the board
-	  	if ( !validPosition( gameboard, piece, adjacentY = 1) || piece.y >= BOARDHEIGHT) {
+	  	if ( !validPosition( gameboard, piece, adjacentY = 1) ) {
 	  		addPieceToGameBoard(gameboard, piece);
 	  		needNewPiece = true;
 	  	}
@@ -203,8 +203,8 @@ function main(canvas_id) {
 	function drawBoard(gameboard) {
 		for ( let x = 0; x < BOARDWIDTH; ++x) {
 			for ( let y = 0; y < BOARDHEIGHT; ++y) {
-				if ( gameboard.board[x][y] ) {
-					drawBox( (HORIZONTALMARGIN + x), (TOPMARGIN + y), BOXSIZE - 1, BOXSIZE - 1, gameboard[x][y] );
+				if ( gameboard.board[x][y] !== false ) {
+					drawBox( (HORIZONTALMARGIN + x), (TOPMARGIN + y), BOXSIZE - 1, BOXSIZE - 1, gameboard.board[x + 1][y + 1] );
 				}
 			}
 		}
@@ -222,7 +222,7 @@ function validPosition(gameboard, piece, adjacentX=0, adjacentY=0) {
 		for ( let y = 0; y < PIECEHEIGHT; ++y ) {
 			if ( piece.piece[piece.rotation][y][x] ) {
 				// check that we're within board bounds and not hitting another piece
-				if ( !checkCordsAreWithinBounds( x + piece.x + adjacentX, y + piece.x + adjacentY ) 
+				if ( !checkCordsAreWithinBounds( x + piece.x + adjacentX, y + piece.y + adjacentY ) 
 					 || gameboard.board[x + piece.x + adjacentX][y + piece.y + adjacentY] )
 					return false;
 			}
@@ -253,7 +253,7 @@ function addPieceToGameBoard(gameBoard, piece) {
 	for ( let x = 0; x < PIECEWIDTH; ++x) {
 		for ( let y = 0; y < PIECEHEIGHT; ++y ) {
 			if ( piece.piece[piece.rotation][y][x] != false ) {
-				gameBoard.board[ piece.x ][ piece.y ] = piece.color;
+				gameBoard.board[ x + piece.x ][ y + piece.y ] = piece.color;
 			}
 		}
 	}
