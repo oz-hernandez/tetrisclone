@@ -128,18 +128,21 @@ function main( canvas_id ) {
 
 	 }
 
-	  var gameBoard 	= initGameBoard( BOARDHEIGHT, BOARDWIDTH );
+	  var gameboard 	= new Gameboard();
 	  var currentPiece 	= new Piece( pieces, colors );
 	  var nextPiece		= new Piece( pieces, colors );
-	  var newPiece  	= false;
+	  var gameover		= false;
 
 	  function update( gameboard, piece ) {
 	  	document.onkeydown = checkKey;
 
 	  	// add piece to board if on top of another or if piece has reached the bottom of the board
 	  	if ( !validPosition( gameboard, piece, adjacentx = 0, adjacentY = 1) ) {
-	  		addPieceToGameBoard( gameboard, piece );
-	  		newPiece = true;
+	  		addPieceTogameboard( gameboard, piece );
+	  		// newPiece = true;
+	  		currentPiece = nextPiece;
+	  		nextPiece = new Piece( pieces, colors );
+
 	  	}
 	  	else 
 	  		piece.y += 1;
@@ -157,14 +160,14 @@ function main( canvas_id ) {
 				piece.x -= 1;
 				clearScreen();
 				drawPiece(piece);
-				drawBoard(gameBoard);
+				drawBoard(gameboard);
 				drawNextPiece( nextPiece );
 			}
 			else if ( e.keyCode == RIGHT_KEY && validPosition( gameboard, piece, adjacentX = 1 ) ) {
 				piece.x += 1;
 				clearScreen();
 				drawPiece(piece);
-				drawBoard(gameBoard);
+				drawBoard(gameboard);
 				drawNextPiece( nextPiece );
 			}
 			// TODO: check that piece doesn't go out of bounds if rotated
@@ -175,14 +178,14 @@ function main( canvas_id ) {
 				}
 				clearScreen();
 				drawPiece(piece);
-				drawBoard(gameBoard);
+				drawBoard(gameboard);
 				drawNextPiece( nextPiece );
 			}
 			else if ( e.keyCode == DOWN_KEY && validPosition( gameboard, piece, adjacentX = 0, adjacentY = 1 ) ) {
 				piece.y += 1;
 				clearScreen();
 				drawPiece(piece);
-				drawBoard(gameBoard);
+				drawBoard(gameboard);
 				drawNextPiece( nextPiece );
 			} 
 		}
@@ -190,16 +193,12 @@ function main( canvas_id ) {
 
 	  // main loop
 	  function gameLoop() {
-	  	newPiece = false;
 	  	clearScreen();
-	  	update( gameBoard, currentPiece );
+	  	update( gameboard, currentPiece );
 	  	drawPiece( currentPiece );
-	  	drawBoard( gameBoard );
+	  	drawBoard( gameboard );
 	  	drawNextPiece( nextPiece );
-	  	if ( newPiece ) {
-	  		currentPiece = nextPiece;
-	  		nextPiece = new Piece( pieces, colors );
-	  	}
+	  	gameover( gameover );
 	  	
 	  	setTimeout(function () {
 	  		requestAnimationFrame(gameLoop);
@@ -235,8 +234,8 @@ function main( canvas_id ) {
 	function drawBoard( gameboard ) {
 		for ( let x = 0; x < BOARDWIDTH; ++x) {
 			for ( let y = 0; y < BOARDHEIGHT; ++y) {
-				if ( gameboard.board[x][y] ) {
-					drawBox( HORIZONTALMARGIN + x * BOXSIZE, TOPMARGIN + y * BOXSIZE, BOXSIZE - 1, BOXSIZE - 1, gameboard.board[x][y] );
+				if ( gameboard.field[x][y] ) {
+					drawBox( HORIZONTALMARGIN + x * BOXSIZE, TOPMARGIN + y * BOXSIZE, BOXSIZE - 1, BOXSIZE - 1, gameboard.field[x][y] );
 				}
 			}
 		}
@@ -255,7 +254,7 @@ function validPosition( gameboard, piece, adjacentX=0, adjacentY=0 ) {
 			if ( piece.piece[piece.rotation][y][x] ) {
 				// check that we're within board bounds and not hitting another piece
 				if ( !checkCordsAreWithinBounds( x + piece.x + adjacentX, y + piece.y + adjacentY ) 
-					 || gameboard.board[x + piece.x + adjacentX][y + piece.y + adjacentY] )
+					 || gameboard.field[x + piece.x + adjacentX][y + piece.y + adjacentY] )
 					return false;
 			}
 		}
@@ -267,25 +266,22 @@ function checkCordsAreWithinBounds( x, y ) {
 	return x >= 0 && x < BOARDWIDTH && y < BOARDHEIGHT;
 }
 
-function initGameBoard() {
-	var gameBoard = function() {
-		this.board = [];
-		// creating multidimensional arrays in javascript is weird :/
-		for ( let i = 0; i < BOARDWIDTH; ++i ) {
-			this.board[i] = [];
-			for ( let j = 0; j < BOARDHEIGHT; ++j ) {
-				this.board[i][j] = false;
-			}
+function Gameboard() {
+	this.field = [];
+	// creating multidimensional arrays in javascript is weird :/
+	for ( let i = 0; i < BOARDWIDTH; ++i ) {
+		this.field[i] = [];
+		for ( let j = 0; j < BOARDHEIGHT; ++j ) {
+			this.field[i][j] = false;
 		}
 	}
-	return new gameBoard;
 }	
 
-function addPieceToGameBoard( gameBoard, piece ) {
+function addPieceTogameboard( gameboard, piece ) {
 	for ( let x = 0; x < PIECEWIDTH; ++x) {
 		for ( let y = 0; y < PIECEHEIGHT; ++y ) {
 			if ( piece.piece[piece.rotation][y][x] ) {
-				gameBoard.board[ x + piece.x ][ y + piece.y ] = piece.color;
+				gameboard.field[ x + piece.x ][ y + piece.y ] = piece.color;
 			}
 		}
 	}
