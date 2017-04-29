@@ -131,31 +131,32 @@ function main( canvas_id ) {
 	  var gameboard 	= new Gameboard();
 	  var currentPiece 	= new Piece( pieces, colors );
 	  var nextPiece		= new Piece( pieces, colors );
-	  var gameover		= false;
+	  var isGameOver	= false;
+	  var doNotDraw		= false;
 
 	  function update( gameboard, piece ) {
-	  	document.onkeydown = checkKey;
-
+	  	// check for game over
+	  	if ( !validPosition( gameboard, piece ) ) {
+	  		isGameOver = true;
+	  		return;
+	  	}
 	  	// add piece to board if on top of another or if piece has reached the bottom of the board
 	  	if ( !validPosition( gameboard, piece, adjacentx = 0, adjacentY = 1) ) {
 	  		addPieceTogameboard( gameboard, piece );
 	  		// newPiece = true;
 	  		currentPiece = nextPiece;
+	  		if ( !validPosition( gameboard, currentPiece ) ) {
+	  			isGameOver = true;
+	  			return;
+	  		}	
 	  		nextPiece = new Piece( pieces, colors );
-
 	  	}
 	  	else 
 	  		piece.y += 1;
+
+	  	document.onkeydown = checkKey;
 		
 	  	function checkKey( e ) {
-
-	  		// don't accept input until piece has entered the gameboard
-	  		if ( piece.y == 0 ) {
-	  			// maybe write a check here to see if new piece will collide with another
-	  			// which probably means the game is over
-	  			return;
-	  		}
-
 			if ( e.keyCode == LEFT_KEY && validPosition( gameboard, piece, adjacentX = -1 ) ) {
 				piece.x -= 1;
 				clearScreen();
@@ -193,12 +194,15 @@ function main( canvas_id ) {
 
 	  // main loop
 	  function gameLoop() {
-	  	clearScreen();
-	  	update( gameboard, currentPiece );
-	  	drawPiece( currentPiece );
-	  	drawBoard( gameboard );
-	  	drawNextPiece( nextPiece );
-	  	gameover( gameover );
+  		clearScreen();
+		update( gameboard, currentPiece );
+
+		if ( !isGameOver )
+			drawPiece( currentPiece );
+
+		drawNextPiece( nextPiece );
+		drawBoard( gameboard );
+	  	gameover( isGameOver, ctx );
 	  	
 	  	setTimeout(function () {
 	  		requestAnimationFrame(gameLoop);
@@ -248,12 +252,22 @@ function main( canvas_id ) {
 	}
 }
 
+function gameover( gameover, frame ) {
+
+	if ( gameover ) {
+		frame.font = "50px ArialBold";
+	  	frame.fillStyle = "red";
+	  	frame.fillText( "Game Over", 208, 50 );
+	}
+}
+
 function validPosition( gameboard, piece, adjacentX=0, adjacentY=0 ) {
 	for ( let x = 0; x < PIECEWIDTH; ++x ) {
 		for ( let y = 0; y < PIECEHEIGHT; ++y ) {
 			if ( piece.piece[piece.rotation][y][x] ) {
 				// check that we're within board bounds and not hitting another piece
-				if ( !checkCordsAreWithinBounds( x + piece.x + adjacentX, y + piece.y + adjacentY ) 
+				if ( 
+					 !checkCordsAreWithinBounds( x + piece.x + adjacentX, y + piece.y + adjacentY ) 
 					 || gameboard.field[x + piece.x + adjacentX][y + piece.y + adjacentY] )
 					return false;
 			}
