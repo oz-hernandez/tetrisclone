@@ -141,7 +141,7 @@ function main( canvas_id ) {
 	  	function checkKey( e ) {
 
 	  		// don't accept input until piece has entered the gameboard
-	  		if (piece.y == 0) {
+	  		if ( piece.y == 0 ) {
 	  			// maybe write a check here to see if new piece will collide with another
 	  			// which probably means the game is over
 	  			return;
@@ -182,13 +182,13 @@ function main( canvas_id ) {
 	  function gameLoop() {
 	  	needNewPiece = false;
 	  	clearScreen();
-	  	update(gameBoard, currentPiece);
-	  	drawPiece(currentPiece);
-	  	drawBoard(gameBoard);
-	  	drawNextPiece(nextPiece);
-	  	if (needNewPiece) {
+	  	update( gameBoard, currentPiece );
+	  	drawPiece( currentPiece );
+	  	drawBoard( gameBoard );
+	  	drawNextPiece( nextPiece );
+	  	if ( needNewPiece ) {
 	  		currentPiece = nextPiece;
-	  		nextPiece = NewPiece(pieces, colors);
+	  		nextPiece = NewPiece( pieces, colors );
 	  	}
 	  	
 	  	setTimeout(function () {
@@ -214,7 +214,7 @@ function main( canvas_id ) {
 		for ( let x = 0; x < PIECEWIDTH; ++x ) {
 			for ( let y = 0; y < PIECEHEIGHT; ++y ) {
 				if ( piece.piece[piece.rotation][y][x] ) {
-					drawBox( ((WINDOWWIDTH - HORIZONTALMARGIN) + (piece.x * BOXSIZE)) + x * BOXSIZE + 2,
+					drawBox( (WINDOWWIDTH - HORIZONTALMARGIN) + (piece.x * BOXSIZE) + (x * BOXSIZE + 2),
 								(TOPMARGIN + (3 * BOXSIZE)) + (y * BOXSIZE),
 								BOXSIZE - 1, BOXSIZE - 1, piece.color )
 				}
