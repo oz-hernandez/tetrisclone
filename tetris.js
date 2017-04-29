@@ -101,7 +101,7 @@ var CUBE_SHAPE = 	[
 	 var	TOPMARGIN			= ( ( WINDOWHEIGHT - ( BOARDHEIGHT * BOXSIZE ) ) - 5 );
 
 
-function main(canvas_id) {
+function main( canvas_id ) {
 
 	 var 	colors 				= [ "red", "blue", "yellow", "orange", "green", "white", "grey", "pink" ];
 		
@@ -115,26 +115,30 @@ function main(canvas_id) {
 	  	ctx.fillStyle = "black";
 	  	ctx.fillRect( 0, 0, WINDOWWIDTH, WINDOWHEIGHT )
 	  	ctx.fillStyle = "#006699"
-	  	ctx.fillRect(HORIZONTALMARGIN, TOPMARGIN, BOXSIZE * BOARDWIDTH, BOXSIZE * BOARDHEIGHT);
+	  	ctx.fillRect( HORIZONTALMARGIN, TOPMARGIN, BOXSIZE * BOARDWIDTH, BOXSIZE * BOARDHEIGHT );
+	  	ctx.font = "25px ArialBold";
+	  	ctx.fillStyle = "red";
+	  	ctx.fillText("Next:",450,150);
+
 	 }
 
-	  var gameBoard 	= initGameBoard(BOARDHEIGHT, BOARDWIDTH);
-	  var currentPiece 	= NewPiece(pieces, colors);
-	  var nextPiece		= NewPiece(pieces, colors);
+	  var gameBoard 	= initGameBoard( BOARDHEIGHT, BOARDWIDTH );
+	  var currentPiece 	= NewPiece( pieces, colors );
+	  var nextPiece		= NewPiece( pieces, colors );
 	  var needNewPiece 	= false;
 
-	  function update(gameboard, piece) {
+	  function update( gameboard, piece ) {
 	  	document.onkeydown = checkKey;
 
 	  	// add piece to board if on top of another or if piece has reached the bottom of the board
 	  	if ( !validPosition( gameboard, piece, adjacentx = 0, adjacentY = 1) ) {
-	  		addPieceToGameBoard(gameboard, piece);
+	  		addPieceToGameBoard( gameboard, piece );
 	  		needNewPiece = true;
 	  	}
 	  	else 
 	  		piece.y += 1;
 		
-	  	function checkKey(e) {
+	  	function checkKey( e ) {
 
 	  		// don't accept input until piece has entered the gameboard
 	  		if (piece.y == 0) {
@@ -181,6 +185,7 @@ function main(canvas_id) {
 	  	update(gameBoard, currentPiece);
 	  	drawPiece(currentPiece);
 	  	drawBoard(gameBoard);
+	  	drawNextPiece(nextPiece);
 	  	if (needNewPiece) {
 	  		currentPiece = nextPiece;
 	  		nextPiece = NewPiece(pieces, colors);
@@ -193,9 +198,9 @@ function main(canvas_id) {
 	
 	  gameLoop();
 
-	function drawPiece(piece) {
-		for ( let x = 0; x < 5; ++x ) {
-			for ( let y = 0; y < 5; ++y ) {
+	function drawPiece( piece ) {
+		for ( let x = 0; x < PIECEWIDTH; ++x ) {
+			for ( let y = 0; y < PIECEHEIGHT; ++y ) {
 				if ( piece.piece[piece.rotation][y][x] ) {
 					drawBox( (HORIZONTALMARGIN + (piece.x * BOXSIZE)) + (x * BOXSIZE), 
 							 (TOPMARGIN + (piece.y * BOXSIZE)) + (y * BOXSIZE), 
@@ -205,24 +210,36 @@ function main(canvas_id) {
 		}
 	}
 
-	function drawBoard(gameboard) {
-		for ( let x = 0; x < BOARDWIDTH; ++x) {
-			for ( let y = 0; y < BOARDHEIGHT; ++y) {
-				if ( gameboard.board[x][y] ) {
-					drawBox( HORIZONTALMARGIN + (x * BOXSIZE), TOPMARGIN + (y * BOXSIZE), BOXSIZE - 1, BOXSIZE - 1, gameboard.board[x][y] );
+	function drawNextPiece( piece ) {
+		for ( let x = 0; x < PIECEWIDTH; ++x ) {
+			for ( let y = 0; y < PIECEHEIGHT; ++y ) {
+				if ( piece.piece[piece.rotation][y][x] ) {
+					drawBox( ((WINDOWWIDTH - HORIZONTALMARGIN) + (piece.x * BOXSIZE)) + x * BOXSIZE + 2,
+								(TOPMARGIN + (3 * BOXSIZE)) + (y * BOXSIZE),
+								BOXSIZE - 1, BOXSIZE - 1, piece.color )
 				}
 			}
 		}
 	}
 
-	function drawBox(globalX, globalY, x, y, fillstyle) {
+	function drawBoard( gameboard ) {
+		for ( let x = 0; x < BOARDWIDTH; ++x) {
+			for ( let y = 0; y < BOARDHEIGHT; ++y) {
+				if ( gameboard.board[x][y] ) {
+					drawBox( HORIZONTALMARGIN + x * BOXSIZE, TOPMARGIN + y * BOXSIZE, BOXSIZE - 1, BOXSIZE - 1, gameboard.board[x][y] );
+				}
+			}
+		}
+	}
+
+	function drawBox( globalX, globalY, x, y, fillstyle ) {
 			// draw each individual box
 			ctx.fillStyle = fillstyle;
 			ctx.fillRect( globalX, globalY, x, y );
 	}
 }
 
-function validPosition(gameboard, piece, adjacentX=0, adjacentY=0) {
+function validPosition( gameboard, piece, adjacentX=0, adjacentY=0 ) {
 	for ( let x = 0; x < PIECEWIDTH; ++x ) {
 		for ( let y = 0; y < PIECEHEIGHT; ++y ) {
 			if ( piece.piece[piece.rotation][y][x] ) {
@@ -236,7 +253,7 @@ function validPosition(gameboard, piece, adjacentX=0, adjacentY=0) {
 	return true;
 }
 
-function checkCordsAreWithinBounds(x, y) {
+function checkCordsAreWithinBounds( x, y ) {
 	return x >= 0 && x < BOARDWIDTH && y < BOARDHEIGHT;
 }
 
@@ -254,7 +271,7 @@ function initGameBoard() {
 	return new gameBoard;
 }	
 
-function addPieceToGameBoard(gameBoard, piece) {
+function addPieceToGameBoard( gameBoard, piece ) {
 	for ( let x = 0; x < PIECEWIDTH; ++x) {
 		for ( let y = 0; y < PIECEHEIGHT; ++y ) {
 			if ( piece.piece[piece.rotation][y][x] ) {
@@ -264,7 +281,7 @@ function addPieceToGameBoard(gameBoard, piece) {
 	}
 }
 
-function NewPiece(piece, colors) {
+function NewPiece( piece, colors ) {
 
 	var Piece = function() {
 
@@ -272,7 +289,7 @@ function NewPiece(piece, colors) {
 		this.rotation 	= Math.floor(Math.random() * this.piece.length);
 		this.color 		= colors[Math.floor(Math.random() * 8)];
 		this.x 			= 3;
-		this.y 			= 0;
+		this.y 			= -2;
 	}
 	return new Piece;
 }
