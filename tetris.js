@@ -111,11 +111,17 @@ function main( canvas_id ) {
 
 	 function clearScreen() {
 	
+		// draw window
 	 	ctx.clearRect( 0, 0, WINDOWWIDTH, WINDOWHEIGHT );
 	  	ctx.fillStyle = "black";
-	  	ctx.fillRect( 0, 0, WINDOWWIDTH, WINDOWHEIGHT )
-	  	ctx.fillStyle = "#006699"
+	  	ctx.fillRect( 0, 0, WINDOWWIDTH, WINDOWHEIGHT );
+	  	// draw boarder
+	  	ctx.fillStyle = "blue";
+	  	ctx.fillRect ( HORIZONTALMARGIN - 3, TOPMARGIN - 3, (BOARDWIDTH * BOXSIZE) + 6, (BOARDHEIGHT * BOXSIZE) + 6);
+	  	// draw board
+	  	ctx.fillStyle = "black";
 	  	ctx.fillRect( HORIZONTALMARGIN, TOPMARGIN, BOXSIZE * BOARDWIDTH, BOXSIZE * BOARDHEIGHT );
+	  	// draw next piece text
 	  	ctx.font = "25px ArialBold";
 	  	ctx.fillStyle = "red";
 	  	ctx.fillText("Next:",450,150);
@@ -123,9 +129,9 @@ function main( canvas_id ) {
 	 }
 
 	  var gameBoard 	= initGameBoard( BOARDHEIGHT, BOARDWIDTH );
-	  var currentPiece 	= NewPiece( pieces, colors );
-	  var nextPiece		= NewPiece( pieces, colors );
-	  var needNewPiece 	= false;
+	  var currentPiece 	= new Piece( pieces, colors );
+	  var nextPiece		= new Piece( pieces, colors );
+	  var newPiece  	= false;
 
 	  function update( gameboard, piece ) {
 	  	document.onkeydown = checkKey;
@@ -133,7 +139,7 @@ function main( canvas_id ) {
 	  	// add piece to board if on top of another or if piece has reached the bottom of the board
 	  	if ( !validPosition( gameboard, piece, adjacentx = 0, adjacentY = 1) ) {
 	  		addPieceToGameBoard( gameboard, piece );
-	  		needNewPiece = true;
+	  		newPiece = true;
 	  	}
 	  	else 
 	  		piece.y += 1;
@@ -152,12 +158,14 @@ function main( canvas_id ) {
 				clearScreen();
 				drawPiece(piece);
 				drawBoard(gameBoard);
+				drawNextPiece( nextPiece );
 			}
 			else if ( e.keyCode == RIGHT_KEY && validPosition( gameboard, piece, adjacentX = 1 ) ) {
 				piece.x += 1;
 				clearScreen();
 				drawPiece(piece);
 				drawBoard(gameBoard);
+				drawNextPiece( nextPiece );
 			}
 			// TODO: check that piece doesn't go out of bounds if rotated
 			else if ( e.keyCode == UP_KEY ) {
@@ -168,27 +176,29 @@ function main( canvas_id ) {
 				clearScreen();
 				drawPiece(piece);
 				drawBoard(gameBoard);
+				drawNextPiece( nextPiece );
 			}
 			else if ( e.keyCode == DOWN_KEY && validPosition( gameboard, piece, adjacentX = 0, adjacentY = 1 ) ) {
 				piece.y += 1;
 				clearScreen();
 				drawPiece(piece);
 				drawBoard(gameBoard);
+				drawNextPiece( nextPiece );
 			} 
 		}
 	  }
 
 	  // main loop
 	  function gameLoop() {
-	  	needNewPiece = false;
+	  	newPiece = false;
 	  	clearScreen();
 	  	update( gameBoard, currentPiece );
 	  	drawPiece( currentPiece );
 	  	drawBoard( gameBoard );
 	  	drawNextPiece( nextPiece );
-	  	if ( needNewPiece ) {
+	  	if ( newPiece ) {
 	  		currentPiece = nextPiece;
-	  		nextPiece = NewPiece( pieces, colors );
+	  		nextPiece = new Piece( pieces, colors );
 	  	}
 	  	
 	  	setTimeout(function () {
@@ -281,15 +291,11 @@ function addPieceToGameBoard( gameBoard, piece ) {
 	}
 }
 
-function NewPiece( piece, colors ) {
-
-	var Piece = function() {
+function Piece( piece, colors ) {
 
 		this.piece 		= piece[Math.floor(Math.random() * piece.length)];
 		this.rotation 	= Math.floor(Math.random() * this.piece.length);
 		this.color 		= colors[Math.floor(Math.random() * 8)];
 		this.x 			= 3;
 		this.y 			= -2;
-	}
-	return new Piece;
 }
