@@ -96,7 +96,6 @@ var CUBE_SHAPE = 	[
 	 var	BOXSIZE				= 20;
 	 var	BOARDWIDTH    		= 10;
 	 var	BOARDHEIGHT   		= 20;
-	 var 	HEIGHT 				= 21;
 
 	 var 	HORIZONTALMARGIN 	= ( ( WINDOWWIDTH - ( BOARDWIDTH * BOXSIZE ) ) / 2 );
 	 var	TOPMARGIN			= ( ( WINDOWHEIGHT - ( BOARDHEIGHT * BOXSIZE ) ) - 5 );
@@ -104,7 +103,7 @@ var CUBE_SHAPE = 	[
 
 function main(canvas_id) {
 
-	 var 	colors 				= [ "red", "blue", "yellow", "orange", "green", "white", "grey" ];
+	 var 	colors 				= [ "red", "blue", "yellow", "orange", "green", "white", "grey", "pink" ];
 		
 	 var 	pieces	 			= [ CUBE_SHAPE, I_SHAPE, Z_SHAPE, S_SHAPE ];
 	 var 	canvas 				= document.getElementById( canvas_id );
@@ -112,9 +111,11 @@ function main(canvas_id) {
 
 	 function clearScreen() {
 	
-	 	ctx.clearRect(0,0,WINDOWWIDTH,WINDOWHEIGHT);
+	 	ctx.clearRect( 0, 0, WINDOWWIDTH, WINDOWHEIGHT );
 	  	ctx.fillStyle = "black";
-	  	ctx.fillRect(HORIZONTALMARGIN,TOPMARGIN,BOXSIZE * BOARDWIDTH,BOXSIZE * HEIGHT);
+	  	ctx.fillRect( 0, 0, WINDOWWIDTH, WINDOWHEIGHT )
+	  	ctx.fillStyle = "#006699"
+	  	ctx.fillRect(HORIZONTALMARGIN, TOPMARGIN, BOXSIZE * BOARDWIDTH, BOXSIZE * BOARDHEIGHT);
 	 }
 
 	  var gameBoard 	= initGameBoard(BOARDHEIGHT, BOARDWIDTH);
@@ -126,7 +127,7 @@ function main(canvas_id) {
 	  	document.onkeydown = checkKey;
 
 	  	// add piece to board if on top of another or if piece has reached the bottom of the board
-	  	if ( !validPosition( gameboard, piece, adjacentY = 1) ) {
+	  	if ( !validPosition( gameboard, piece, adjacentx = 0, adjacentY = 1) ) {
 	  		addPieceToGameBoard(gameboard, piece);
 	  		needNewPiece = true;
 	  	}
@@ -142,15 +143,17 @@ function main(canvas_id) {
 	  			return;
 	  		}
 
-			if ( e.keyCode == LEFT_KEY && validPosition( gameboard, piece, adjacentX = -1 ) ) {
+			if ( e.keyCode == LEFT_KEY && validPosition( gameboard, piece, adjacentX = -1, adjacentY = 0) ) {
 				piece.x -= 1;
 				clearScreen();
 				drawPiece(piece);
+				drawBoard(gameBoard);
 			}
-			else if ( e.keyCode == RIGHT_KEY && validPosition( gameboard, piece, adjacentX = 1 ) ) {
+			else if ( e.keyCode == RIGHT_KEY && validPosition( gameboard, piece, adjacentX = 1, adjacentY = 0 ) ) {
 				piece.x += 1;
 				clearScreen();
 				drawPiece(piece);
+				drawBoard(gameBoard);
 			}
 			// TODO: check that piece doesn't go out of bounds if rotated
 			else if ( e.keyCode == UP_KEY ) {
@@ -160,11 +163,13 @@ function main(canvas_id) {
 				}
 				clearScreen();
 				drawPiece(piece);
+				drawBoard(gameBoard);
 			}
-			else if ( e.keyCode == DOWN_KEY && validPosition( gameboard, piece, adjacentY = 1 ) ) {
+			else if ( e.keyCode == DOWN_KEY && validPosition( gameboard, piece, adjacentX = 0, adjacentY = 1 ) ) {
 				piece.y += 1;
 				clearScreen();
 				drawPiece(piece);
+				drawBoard(gameBoard);
 			} 
 		}
 	  }
@@ -203,8 +208,8 @@ function main(canvas_id) {
 	function drawBoard(gameboard) {
 		for ( let x = 0; x < BOARDWIDTH; ++x) {
 			for ( let y = 0; y < BOARDHEIGHT; ++y) {
-				if ( gameboard.board[x][y] !== false ) {
-					drawBox( (HORIZONTALMARGIN + x), (TOPMARGIN + y), BOXSIZE - 1, BOXSIZE - 1, gameboard.board[x + 1][y + 1] );
+				if ( gameboard.board[x][y] ) {
+					drawBox( HORIZONTALMARGIN + (x * BOXSIZE), TOPMARGIN + (y * BOXSIZE), BOXSIZE - 1, BOXSIZE - 1, gameboard.board[x][y] );
 				}
 			}
 		}
@@ -265,7 +270,7 @@ function NewPiece(piece, colors) {
 
 		this.piece 		= piece[Math.floor(Math.random() * piece.length)];
 		this.rotation 	= Math.floor(Math.random() * this.piece.length);
-		this.color 		= colors[Math.floor(Math.random() * 7)];
+		this.color 		= colors[Math.floor(Math.random() * 8)];
 		this.x 			= 3;
 		this.y 			= 0;
 	}
