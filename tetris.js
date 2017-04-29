@@ -266,8 +266,7 @@ function validPosition( gameboard, piece, adjacentX=0, adjacentY=0 ) {
 		for ( let y = 0; y < PIECEHEIGHT; ++y ) {
 			if ( piece.piece[piece.rotation][y][x] ) {
 				// check that we're within board bounds and not hitting another piece
-				if ( 
-					 !checkCordsAreWithinBounds( x + piece.x + adjacentX, y + piece.y + adjacentY ) 
+				if ( !checkCordsAreWithinBounds( x + piece.x + adjacentX, y + piece.y + adjacentY ) 
 					 || gameboard.field[x + piece.x + adjacentX][y + piece.y + adjacentY] )
 					return false;
 			}
