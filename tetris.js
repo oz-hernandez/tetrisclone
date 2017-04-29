@@ -143,13 +143,13 @@ function main(canvas_id) {
 	  			return;
 	  		}
 
-			if ( e.keyCode == LEFT_KEY && validPosition( gameboard, piece, adjacentX = -1, adjacentY = 0) ) {
+			if ( e.keyCode == LEFT_KEY && validPosition( gameboard, piece, adjacentX = -1 ) ) {
 				piece.x -= 1;
 				clearScreen();
 				drawPiece(piece);
 				drawBoard(gameBoard);
 			}
-			else if ( e.keyCode == RIGHT_KEY && validPosition( gameboard, piece, adjacentX = 1, adjacentY = 0 ) ) {
+			else if ( e.keyCode == RIGHT_KEY && validPosition( gameboard, piece, adjacentX = 1 ) ) {
 				piece.x += 1;
 				clearScreen();
 				drawPiece(piece);
