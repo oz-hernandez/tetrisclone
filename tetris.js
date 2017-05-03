@@ -264,9 +264,9 @@ function removeLines( gameboard ) {
 	for ( let y = BOARDHEIGHT; y >= 0; ) {
 		// check if line is full
 		if ( isLineFull( gameboard, y ) ) {
-			for ( let x1 = 0; x1 < BOARDWIDTH; ++x1 ) {
-				gameboard.field[x1].splice(y, 1);
-				gameboard.field[x1].unshift(false);
+			for ( let x = 0; x < BOARDWIDTH; ++x ) {
+				gameboard.field[x].splice(y, 1);
+				gameboard.field[x].unshift(false);
 			}
 		}
 		else
