@@ -143,7 +143,7 @@ function main( canvas_id ) {
 	  	// add piece to board if on top of another or if piece has reached the bottom of the board
 	  	if ( !validPosition( gameboard, piece, adjacentx = 0, adjacentY = 1) ) {
 	  		addPieceTogameboard( gameboard, piece );
-	  		// newPiece = true;
+	  		removeLines( gameboard );
 	  		currentPiece = nextPiece;
 	  		if ( !validPosition( gameboard, currentPiece ) ) {
 	  			isGameOver = true;
@@ -249,6 +249,28 @@ function main( canvas_id ) {
 			// draw each individual box
 			ctx.fillStyle = fillstyle;
 			ctx.fillRect( globalX, globalY, x, y );
+	}
+}
+
+function isLineFull( gameboard, y ) {
+	for ( let x = 0; x < BOARDWIDTH; ++x) {
+		if ( !gameboard.field[x][y] )
+			return false;
+	}
+	return true;
+}
+
+function removeLines( gameboard ) {
+	for ( let y = BOARDHEIGHT; y >= 0; ) {
+		// check if line is full
+		if ( isLineFull( gameboard, y ) ) {
+			for ( let x1 = 0; x1 < BOARDWIDTH; ++x1 ) {
+				gameboard.field[x1].splice(y, 1);
+				gameboard.field[x1].unshift(false);
+			}
+		}
+		else
+			--y;
 	}
 }
 
