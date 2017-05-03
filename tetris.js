@@ -269,8 +269,9 @@ function removeLines( gameboard ) {
 				gameboard.field[x].unshift(false);
 			}
 		}
-		else
+		else {
 			--y;
+		}
 	}
 }
 
