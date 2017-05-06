@@ -81,6 +81,7 @@ var CUBE_SHAPE = 	[
 	 var	UP_KEY				= 38;
 	 var 	RIGHT_KEY			= 39;
 	 var 	DOWN_KEY			= 40;
+	 var	SPACE_BAR			= 32;
 
 
 	 /*
@@ -141,7 +142,7 @@ function main( canvas_id ) {
 	  		return;
 	  	}
 	  	// add piece to board if on top of another or if piece has reached the bottom of the board
-	  	if ( !validPosition( gameboard, piece, adjacentx = 0, adjacentY = 1) ) {
+	  	if ( !validPosition( gameboard, piece, adjacentx = 0, adjacentY = 1 ) ) {
 	  		addPieceTogameboard( gameboard, piece );
 	  		removeLines( gameboard );
 	  		currentPiece = nextPiece;
@@ -188,7 +189,18 @@ function main( canvas_id ) {
 				drawPiece(piece);
 				drawBoard(gameboard);
 				drawNextPiece( nextPiece );
-			} 
+			}
+			else if ( e.keyCode == SPACE_BAR ) {
+				while ( validPosition( gameboard, piece, adjacentX = 0, adjacentY = 1 ) )
+					piece.y += 1;
+				addPieceTogameboard( gameboard, piece );
+				removeLines( gameboard );
+				currentPiece = nextPiece;
+				nextPiece = new Piece( pieces, colors );
+				clearScreen();
+				drawBoard(gameboard);
+				drawNextPiece( nextPiece );
+			}
 		}
 	  }
 
@@ -206,7 +218,7 @@ function main( canvas_id ) {
 	  	
 	  	setTimeout(function () {
 	  		requestAnimationFrame(gameLoop);
-	  	}, 1000 * 0.50)
+	  	}, 1000 * 0.40)
 	  }
 	
 	  gameLoop();
