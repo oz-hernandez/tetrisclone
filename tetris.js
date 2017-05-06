@@ -198,7 +198,6 @@ function main( canvas_id ) {
 				currentPiece = nextPiece;
 				nextPiece = new Piece( pieces, colors );
 				clearScreen();
-				
 				drawBoard(gameboard);
 				drawNextPiece( nextPiece );
 			}
@@ -219,7 +218,7 @@ function main( canvas_id ) {
 	  	
 	  	setTimeout(function () {
 	  		requestAnimationFrame(gameLoop);
-	  	}, 1000 * 0.40)
+	  	}, 1000 * 0.30)
 	  }
 	
 	  gameLoop();
