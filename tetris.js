@@ -140,6 +140,40 @@ var J_SHAPE =		[
 						]
 					]
 
+var T_SHAPE =		[
+						[
+							[0,0,0,0,0],
+							[0,0,1,0,0],
+							[0,1,1,1,0],
+							[0,0,0,0,0],
+							[0,0,0,0,0]
+						],
+
+						[ 
+							[0,0,0,0,0],
+							[0,0,1,0,0],
+							[0,0,1,1,0],
+							[0,0,1,0,0],
+							[0,0,0,0,0]
+						],
+ 						
+ 						[
+ 							[0,0,0,0,0],
+ 							[0,1,1,1,0],
+ 							[0,0,1,0,0],
+ 							[0,0,0,0,0],
+ 							[0,0,0,0,0]
+ 						],
+
+ 						[
+ 							[0,0,0,0,0],
+ 							[0,0,1,0,0],
+ 							[0,1,1,0,0],
+ 							[0,0,1,0,0],
+ 							[0,0,0,0,0]
+ 						]
+ 					]
+
 	/*
 	 * 		key events
 	 *
@@ -174,7 +208,7 @@ function main( canvas_id ) {
 
 	 var 	colors 				= [ "red", "blue", "yellow", "orange", "green", "white", "grey", "pink" ];
 		
-	 var 	pieces	 			= [ CUBE_SHAPE, I_SHAPE, Z_SHAPE, S_SHAPE, L_SHAPE ];
+	 var 	pieces	 			= [ CUBE_SHAPE, I_SHAPE, Z_SHAPE, S_SHAPE, L_SHAPE, T_SHAPE, J_SHAPE ];
 	 var 	canvas 				= document.getElementById( canvas_id );
 	 var 	ctx 				= canvas.getContext( "2d" );
 
