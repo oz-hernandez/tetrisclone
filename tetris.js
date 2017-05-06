@@ -198,6 +198,7 @@ function main( canvas_id ) {
 				currentPiece = nextPiece;
 				nextPiece = new Piece( pieces, colors );
 				clearScreen();
+				
 				drawBoard(gameboard);
 				drawNextPiece( nextPiece );
 			}
